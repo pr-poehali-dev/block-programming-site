@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import BlockEditor from "@/components/BlockEditor";
 
 const CHALLENGES = [
   {
@@ -40,7 +41,7 @@ const EXAMPLES = [
   { title: "Квиз-викторина", emoji: "🧠", blocks: 20, category: "Игры", color: "#FF5722" },
 ];
 
-type Section = "home" | "examples" | "about";
+type Section = "home" | "examples" | "about" | "editor";
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState<Section>("home");
@@ -93,6 +94,17 @@ export default function Index() {
               {s === "home" ? "Главная" : s === "examples" ? "Примеры" : "О проекте"}
             </button>
           ))}
+          <button
+            onClick={() => setActiveSection("editor")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-1.5 ${
+              activeSection === "editor"
+                ? "bg-gradient-to-r from-[#00FF94] to-[#00BCD4] text-black shadow-lg shadow-[#00FF94]/30"
+                : "text-[#00FF94]/70 hover:text-[#00FF94] hover:bg-[#00FF94]/10"
+            }`}
+          >
+            <Icon name="Puzzle" size={14} />
+            Редактор
+          </button>
         </div>
 
         <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2">
@@ -405,17 +417,42 @@ export default function Index() {
         </main>
       )}
 
-      {/* Футер */}
-      <footer className="relative z-10 border-t border-white/10 px-6 md:px-12 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🧩</span>
-            <span className="font-bold">Блок<span className="text-[#00FF94]">Код</span></span>
+      {/* ===== РЕДАКТОР ===== */}
+      {activeSection === "editor" && (
+        <div className="relative z-10 flex flex-col" style={{ height: "calc(100vh - 73px)" }}>
+          <div className="flex items-center justify-between px-6 py-3 border-b border-white/10 bg-black/30 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <Icon name="Puzzle" size={18} className="text-[#00FF94]" />
+              <span className="font-bold text-white">Редактор блок-схем</span>
+              <span className="text-white/40 text-sm">— перетащи блок из панели, двойной клик для редактирования</span>
+            </div>
+            <button
+              onClick={() => setActiveSection("home")}
+              className="text-white/40 hover:text-white text-sm flex items-center gap-1.5 transition-colors"
+            >
+              <Icon name="X" size={14} />
+              Закрыть
+            </button>
           </div>
-          <p className="text-white/30 text-sm">Учись программировать блоками — без страха и без синтаксиса</p>
-          <div className="text-[#FFD600] text-sm font-bold">⚡ {totalXP} XP набрано</div>
+          <div className="flex-1 min-h-0">
+            <BlockEditor />
+          </div>
         </div>
-      </footer>
+      )}
+
+      {/* Футер */}
+      {activeSection !== "editor" && (
+        <footer className="relative z-10 border-t border-white/10 px-6 md:px-12 py-8 mt-12">
+          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🧩</span>
+              <span className="font-bold">Блок<span className="text-[#00FF94]">Код</span></span>
+            </div>
+            <p className="text-white/30 text-sm">Учись программировать блоками — без страха и без синтаксиса</p>
+            <div className="text-[#FFD600] text-sm font-bold">⚡ {totalXP} XP набрано</div>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }
